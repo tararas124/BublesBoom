@@ -6,14 +6,17 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 public class CanvasView extends View implements ICanvasView {
 
     private static int width;
     private Paint paint;
+    private Toast toast;
     private static int height;
     private Canvas canvas;
     private GameManager gameManager;
@@ -50,7 +53,24 @@ public class CanvasView extends View implements ICanvasView {
 
     @Override
     public void drawCircle(SimpleCircle circle) {
+        paint.setColor(circle.getColor());
         canvas.drawCircle(circle.getX(), circle.getY(), circle.getRadius(), paint);
+    }
+
+    @Override
+    public void redraw() {
+        invalidate();
+    }
+
+    @Override
+    public void showMessage(String text) {
+        if(toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(getContext(), text, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+
     }
 
     @Override
@@ -58,9 +78,15 @@ public class CanvasView extends View implements ICanvasView {
         int x = (int) event.getX();
         int y = (int) event.getY();
         if(event.getAction() == MotionEvent.ACTION_MOVE) {
-            gameManager.onTochEvent(x, y);
+            gameManager.onTouchEvent(x, y);
         }
         invalidate();
         return true;
+    }
+
+    public static int recalculateRadius(int radius) {
+        if (width < height) {
+            return radius;
+        } else return radius;
     }
 }

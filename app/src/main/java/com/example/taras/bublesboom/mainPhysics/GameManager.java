@@ -10,6 +10,7 @@ import java.util.List;
 
 public class GameManager {
 
+    public static final int MAX_CIRCLES = 10;
     private MainCircle mainCircle;
     private CanvasView canvasView;
     List<EnemyCircle> circles;
@@ -25,8 +26,23 @@ public class GameManager {
     }
 
     private void initEnemyCircles() {
+        SimpleCircle mainCircleArea = mainCircle.getCircleArea();
         circles = new ArrayList<>();
+        for(int i = 0; i < MAX_CIRCLES; i++) {
+            EnemyCircle circle;
+            do {
+                circle = EnemyCircle.getRandomCircle(mainCircle);
+            } while (circle.isIntersect(mainCircleArea));
+            circles.add(circle);
+        }
+        calculateAndSetColor();
 
+    }
+
+    private void calculateAndSetColor() {
+        for (EnemyCircle circle : circles) {
+            circle.setEnemyColor(mainCircle);
+        }
     }
 
     public static int getWidth() {
@@ -43,9 +59,46 @@ public class GameManager {
 
     public void onDraw() {
         canvasView.drawCircle(mainCircle);
+        for (EnemyCircle circle : circles) {
+            canvasView.drawCircle(circle);
+        }
     }
 
-    public void onTochEvent(int x, int y) {
+    public void onTouchEvent(int x, int y) {
         mainCircle.moveMyCircleWhenTouchAt(x, y);
+        checkCollision();
+        moveCircles();
+    }
+
+    private void checkCollision() {
+        for (EnemyCircle circle : circles) {
+            if(mainCircle.isIntersect(circle)) {
+                if(circle.isSmaller(mainCircle)) {
+                    mainCircle.growRadius(circle);
+                    circles.remove(circle);
+                    calculateAndSetColor();
+                    break;
+                } else {
+                    gameEnd("You Lose!!!");
+                    return;
+                }
+            }
+        }
+        if(circles.isEmpty()) {
+            gameEnd("You Win!!!");
+        }
+    }
+
+    private void gameEnd(String text) {
+        canvasView.showMessage(text);
+        mainCircle.initRadius();
+        initEnemyCircles();
+        canvasView.redraw();
+    }
+
+    private void moveCircles() {
+        for (EnemyCircle circle : circles) {
+            circle.moveOnStep();
+        }
     }
 }
