@@ -10,13 +10,16 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.taras.bublesboom.MainGame;
+import com.example.taras.bublesboom.R;
 
 public class CanvasView extends View implements ICanvasView {
 
     private static int width;
     private Paint paint;
-    private Toast toast;
     private static int height;
     private Canvas canvas;
     private GameManager gameManager;
@@ -64,13 +67,7 @@ public class CanvasView extends View implements ICanvasView {
 
     @Override
     public void showMessage(String text) {
-        if(toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(getContext(), text, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-
+        MainGame.changeScore();
     }
 
     @Override

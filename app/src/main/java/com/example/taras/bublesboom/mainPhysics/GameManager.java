@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.widget.Toast;
 
+import com.example.taras.bublesboom.MainGame;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,12 +81,14 @@ public class GameManager {
                     calculateAndSetColor();
                     break;
                 } else {
+                    MainGame.lose++;
                     gameEnd("You Lose!!!");
                     return;
                 }
             }
         }
         if(circles.isEmpty()) {
+            MainGame.win++;
             gameEnd("You Win!!!");
         }
     }
