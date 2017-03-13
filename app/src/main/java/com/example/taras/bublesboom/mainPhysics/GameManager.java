@@ -1,10 +1,6 @@
 package com.example.taras.bublesboom.mainPhysics;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.widget.Toast;
-
-import com.example.taras.bublesboom.MainGame;
+import com.example.taras.bublesboom.MainGameActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,14 +77,14 @@ public class GameManager {
                     calculateAndSetColor();
                     break;
                 } else {
-                    MainGame.lose++;
+                    MainGameActivity.lose++;
                     gameEnd("You Lose!!!");
                     return;
                 }
             }
         }
         if(circles.isEmpty()) {
-            MainGame.win++;
+            MainGameActivity.win++;
             gameEnd("You Win!!!");
         }
     }
